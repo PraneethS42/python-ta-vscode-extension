@@ -88,6 +88,22 @@ def test_parse_json_output_returns_diagnostics_for_matching_uri():
     assert diagnostic.severity == lsp.DiagnosticSeverity.Error
 
 
+def test_parse_json_output_returns_stdin_diagnostics_despite_temporary_uri():
+    payload = _make_payload()
+    payload[0]["uri"] = "file:///tmp/stdin_abc123.py"
+    content = json.dumps(payload[:1])
+
+    result = lsp_server._parse_json_output(
+        content,
+        "file:///home/user/project/foo.py",
+        use_stdin=True,
+    )
+
+    assert len(result) == 1
+    assert result[0].message == "msg"
+    assert result[0].code == "E0001"
+
+
 def test_parse_json_output_ignores_leading_log_lines():
     content = "some log preamble\nmore logs\n" + json.dumps(_make_payload())
     result = lsp_server._parse_json_output(content, "file:///home/user/project/foo.py")
