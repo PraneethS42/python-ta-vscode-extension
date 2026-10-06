@@ -50,6 +50,23 @@ def test_get_document_path_notebook_cell_uri_strips_scheme_and_fragment():
 
 
 # ---------------------------------------------------------------------------
+# _normalize_source
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("source", "expected"),
+    [
+        ("line1\r\nline2\r\n", "line1\nline2\n"),
+        ("line1\rline2\r", "line1\nline2\n"),
+        ("line1\nline2\n", "line1\nline2\n"),
+    ],
+)
+def test_normalize_source_line_endings(source, expected):
+    assert lsp_server._normalize_source(source) == expected
+
+
+# ---------------------------------------------------------------------------
 # _parse_json_output
 # ---------------------------------------------------------------------------
 

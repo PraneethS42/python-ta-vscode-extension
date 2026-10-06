@@ -232,6 +232,11 @@ def _get_document_path(document: workspace.Document) -> str:
     return uris.to_fs_path(document.uri)
 
 
+def _normalize_source(source: str) -> str:
+    """Normalize document line endings before sending source through stdin."""
+    return source.replace("\r\n", "\n").replace("\r", "\n")
+
+
 def _linting_helper(document: workspace.Document) -> list[lsp.Diagnostic]:
     result = _run_tool_on_document(document, use_stdin=True)
     if result and result.stdout:
@@ -473,6 +478,7 @@ def _run_tool_on_document(
         # TODO: Decide on if you want to skip standard library files.
         # Skip standard library python files.
         return None
+    source = _normalize_source(document.source)
 
     # deep copy here to prevent accidentally updating global settings.
     settings = copy.deepcopy(_get_settings_by_document(document))
@@ -518,7 +524,7 @@ def _run_tool_on_document(
             argv=argv,
             use_stdin=use_stdin,
             cwd=cwd,
-            source=document.source.replace("\r\n", "\n"),
+            source=source,
         )
         if result.stderr:
             log_to_output(result.stderr)
@@ -535,7 +541,7 @@ def _run_tool_on_document(
             argv=argv,
             use_stdin=use_stdin,
             cwd=cwd,
-            source=document.source,
+            source=source,
         )
         if result.exception:
             log_error(result.exception)
@@ -560,7 +566,7 @@ def _run_tool_on_document(
                     argv=argv,
                     use_stdin=use_stdin,
                     cwd=cwd,
-                    source=document.source,
+                    source=source,
                 )
             except Exception:
                 log_error(traceback.format_exc(chain=True))
