@@ -11,6 +11,7 @@ export interface ISettings {
     importStrategy: string;
     showNotifications: string;
     configPath: string;
+    useProjectRootConfig: boolean;
 }
 
 export function getExtensionSettings(namespace: string, includeInterpreter?: boolean): Promise<ISettings[]> {
@@ -73,6 +74,7 @@ export async function getWorkspaceSettings(
         importStrategy: config.get<string>(`importStrategy`) ?? 'useBundled',
         showNotifications: config.get<string>(`showNotifications`) ?? 'off',
         configPath: config.get<string>('configPath', ''),
+        useProjectRootConfig: config.get<boolean>('useProjectRootConfig', false),
     };
     return workspaceSetting;
 }
@@ -102,6 +104,7 @@ export async function getGlobalSettings(namespace: string, includeInterpreter?: 
         importStrategy: getGlobalValue<string>(config, 'importStrategy', 'useBundled'),
         showNotifications: getGlobalValue<string>(config, 'showNotifications', 'off'),
         configPath: getGlobalValue<string>(config, 'configPath', ''),
+        useProjectRootConfig: getGlobalValue<boolean>(config, 'useProjectRootConfig', false),
     };
     return setting;
 }
@@ -115,6 +118,7 @@ export function checkIfConfigurationChanged(e: ConfigurationChangeEvent, namespa
         `${namespace}.importStrategy`,
         `${namespace}.showNotifications`,
         `${namespace}.configPath`,
+        `${namespace}.useProjectRootConfig`,
     ];
     const changed = settings.map((s) => e.affectsConfiguration(s));
     return changed.includes(true);

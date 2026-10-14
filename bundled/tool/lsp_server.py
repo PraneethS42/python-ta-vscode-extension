@@ -85,6 +85,7 @@ TOOL_MODULE = "python_ta"
 
 TOOL_DISPLAY = "PythonTA"
 TOOL_ARGS = ["--output-format", "pyta-lsp", "--exit-zero"]  # default arguments always passed to your tool
+PROJECT_ROOT_CONFIG_FILENAMES = (".pylintrc", "pylintrc", "pyproject.toml")
 
 # TODO: If your tool is a linter then update this section.
 # Delete "Linting features" section if your tool is NOT a linter.
@@ -387,6 +388,7 @@ def _get_global_defaults():
         "importStrategy": GLOBAL_SETTINGS.get("importStrategy", "useBundled"),
         "showNotifications": GLOBAL_SETTINGS.get("showNotifications", "off"),
         "configPath": GLOBAL_SETTINGS.get("configPath", ""),
+        "useProjectRootConfig": GLOBAL_SETTINGS.get("useProjectRootConfig", False),
     }
 
 
@@ -455,6 +457,27 @@ def _get_settings_by_document(document: workspace.TextDocument | None):
     return WORKSPACE_SETTINGS[str(key)]
 
 
+def _find_project_root_config(project_root: str, config_filenames: Sequence[str]) -> str | None:
+    """Return the first config file from inputted filenames that's found in the project root."""
+    root = pathlib.Path(project_root)
+    for filename in config_filenames:
+        config_path = root / filename
+        if config_path.is_file():
+            return os.fspath(config_path)
+
+    return None
+
+
+def _get_config_path(settings: dict[str, Any]) -> str | None:
+    """Return the discovered project-root config or the configured path."""
+    if settings.get("useProjectRootConfig", False):
+        return _find_project_root_config(
+            settings["workspaceFS"], PROJECT_ROOT_CONFIG_FILENAMES
+        )
+
+    return settings.get("configPath") or None
+
+
 # *****************************************************
 # Internal execution APIs.
 # *****************************************************
@@ -507,7 +530,7 @@ def _run_tool_on_document(
 
     argv += TOOL_ARGS + settings["args"] + extra_args
 
-    config_path = settings.get("configPath")
+    config_path = _get_config_path(settings)
     if config_path:
         argv += ["--config", config_path]
 

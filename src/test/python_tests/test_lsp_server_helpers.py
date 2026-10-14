@@ -144,6 +144,53 @@ def test_parse_json_output_returns_empty_list_for_file_with_no_diagnostics():
 
 
 # ---------------------------------------------------------------------------
+# Project-root config discovery and selection
+# ---------------------------------------------------------------------------
+
+
+def test_get_config_path_uses_pyta_filename_priority_when_enabled(tmp_path):
+    (tmp_path / "pyproject.toml").touch()
+    (tmp_path / "pylintrc").touch()
+    highest_priority = tmp_path / ".pylintrc"
+    highest_priority.touch()
+    settings = {
+        "useProjectRootConfig": True,
+        "configPath": os.fspath(tmp_path / "manual.toml"),
+        "workspaceFS": os.fspath(tmp_path),
+    }
+
+    result = lsp_server._get_config_path(settings)
+
+    assert result == os.fspath(highest_priority)
+
+
+def test_get_config_path_ignores_config_path_when_discovery_finds_nothing(tmp_path):
+    settings = {
+        "useProjectRootConfig": True,
+        "configPath": os.fspath(tmp_path / "manual.toml"),
+        "workspaceFS": os.fspath(tmp_path),
+    }
+
+    result = lsp_server._get_config_path(settings)
+
+    assert result is None
+
+
+def test_get_config_path_uses_config_path_when_discovery_is_disabled(tmp_path):
+    (tmp_path / ".pylintrc").touch()
+    manual_config = tmp_path / "manual.toml"
+    settings = {
+        "useProjectRootConfig": False,
+        "configPath": os.fspath(manual_config),
+        "workspaceFS": os.fspath(tmp_path),
+    }
+
+    result = lsp_server._get_config_path(settings)
+
+    assert result == os.fspath(manual_config)
+
+
+# ---------------------------------------------------------------------------
 # _get_global_defaults
 # ---------------------------------------------------------------------------
 
@@ -155,6 +202,7 @@ def test_get_global_defaults_uses_builtin_fallbacks_when_empty():
     assert defaults["importStrategy"] == "useBundled"
     assert defaults["showNotifications"] == "off"
     assert defaults["configPath"] == ""
+    assert defaults["useProjectRootConfig"] is False
 
 
 def test_get_global_defaults_reflects_global_settings_overrides():

@@ -75,6 +75,12 @@
                     "description": "Absolute or relative path to your PythonTA configuration file (e.g., .pyta_config.ini).",
                     "scope": "resource"
                 },
+                "python-ta.useProjectRootConfig": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Automatically use a supported PythonTA configuration file from the workspace root. When enabled, python-ta.configPath is ignored.",
+                    "scope": "resource"
+                },
                 "python-ta.cwd": {
                     "default": "${workspaceFolder}",
                     "description": "Sets the working directory for python-ta. Supported variables: `${workspaceFolder}` (workspace root) and `${fileDirname}` (directory of the current file).",
