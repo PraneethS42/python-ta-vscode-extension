@@ -12,7 +12,7 @@ suite('settings.getGlobalSettings', () => {
         assert.strictEqual(settings.importStrategy, 'useBundled');
         assert.strictEqual(settings.showNotifications, 'off');
         assert.strictEqual(settings.configPath, '');
-        assert.strictEqual(settings.useProjectRootConfig, false);
+        assert.strictEqual(settings.useProjectRootConfig, true);
     });
 });
 

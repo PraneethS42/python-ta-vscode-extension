@@ -202,7 +202,7 @@ def test_get_global_defaults_uses_builtin_fallbacks_when_empty():
     assert defaults["importStrategy"] == "useBundled"
     assert defaults["showNotifications"] == "off"
     assert defaults["configPath"] == ""
-    assert defaults["useProjectRootConfig"] is False
+    assert defaults["useProjectRootConfig"] is True
 
 
 def test_get_global_defaults_reflects_global_settings_overrides():

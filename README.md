@@ -4,11 +4,11 @@ This project is an extension for running [PythonTA](https://www.cs.toronto.edu/~
 
 ## Configuration
 
-Set `python-ta.useProjectRootConfig` to `true` to automatically use a PythonTA configuration file from the root of the current workspace. 
+By default, `python-ta.useProjectRootConfig` automatically uses a PythonTA configuration file from the root of the current workspace.
 The extension checks for `.pylintrc`, `pylintrc`, and `pyproject.toml`, in that order.
 
 When project-root configuration discovery is enabled, `python-ta.configPath` is ignored. 
-When it is disabled (the default), `python-ta.configPath` continues to specify the configuration file.
+When discovery is disabled, `python-ta.configPath` specifies the configuration file instead.
 
 ## Developers
 

@@ -74,7 +74,7 @@ export async function getWorkspaceSettings(
         importStrategy: config.get<string>(`importStrategy`) ?? 'useBundled',
         showNotifications: config.get<string>(`showNotifications`) ?? 'off',
         configPath: config.get<string>('configPath', ''),
-        useProjectRootConfig: config.get<boolean>('useProjectRootConfig', false),
+        useProjectRootConfig: config.get<boolean>('useProjectRootConfig', true),
     };
     return workspaceSetting;
 }
@@ -104,7 +104,7 @@ export async function getGlobalSettings(namespace: string, includeInterpreter?: 
         importStrategy: getGlobalValue<string>(config, 'importStrategy', 'useBundled'),
         showNotifications: getGlobalValue<string>(config, 'showNotifications', 'off'),
         configPath: getGlobalValue<string>(config, 'configPath', ''),
-        useProjectRootConfig: getGlobalValue<boolean>(config, 'useProjectRootConfig', false),
+        useProjectRootConfig: getGlobalValue<boolean>(config, 'useProjectRootConfig', true),
     };
     return setting;
 }

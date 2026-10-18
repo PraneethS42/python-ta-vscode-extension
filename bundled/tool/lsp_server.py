@@ -388,7 +388,7 @@ def _get_global_defaults():
         "importStrategy": GLOBAL_SETTINGS.get("importStrategy", "useBundled"),
         "showNotifications": GLOBAL_SETTINGS.get("showNotifications", "off"),
         "configPath": GLOBAL_SETTINGS.get("configPath", ""),
-        "useProjectRootConfig": GLOBAL_SETTINGS.get("useProjectRootConfig", False),
+        "useProjectRootConfig": GLOBAL_SETTINGS.get("useProjectRootConfig", True),
     }
 
 
@@ -470,7 +470,7 @@ def _find_project_root_config(project_root: str, config_filenames: Sequence[str]
 
 def _get_config_path(settings: dict[str, Any]) -> str | None:
     """Return the discovered project-root config or the configured path."""
-    if settings.get("useProjectRootConfig", False):
+    if settings.get("useProjectRootConfig", True):
         return _find_project_root_config(
             settings["workspaceFS"], PROJECT_ROOT_CONFIG_FILENAMES
         )
