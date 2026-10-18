@@ -2,6 +2,14 @@
 
 This project is an extension for running [PythonTA](https://www.cs.toronto.edu/~david/pyta/) within VS Code.
 
+## Configuration
+
+By default, `python-ta.useProjectRootConfig` automatically uses a PythonTA configuration file from the root of the current workspace.
+The extension checks for `.pylintrc`, `pylintrc`, and `pyproject.toml`, in that order.
+
+When project-root configuration discovery is enabled, `python-ta.configPath` is ignored. 
+When discovery is disabled, `python-ta.configPath` specifies the configuration file instead.
+
 ## Developers
 
 ### Requirements

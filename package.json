@@ -69,10 +69,18 @@
     "contributes": {
         "configuration": {
             "properties": {
+                "python-ta.useProjectRootConfig": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Automatically use a supported PythonTA configuration file from the workspace root. When enabled, python-ta.configPath is ignored.",
+                    "order": 1,
+                    "scope": "resource"
+                },
                 "python-ta.configPath": {
                     "type": "string",
                     "default": "",
-                    "description": "Absolute or relative path to your PythonTA configuration file (e.g., .pyta_config.ini).",
+                    "description": "Absolute or relative path to your PythonTA configuration file (e.g., .pyta_config.ini). This setting is ignored when python-ta.useProjectRootConfig is enabled.",
+                    "order": 2,
                     "scope": "resource"
                 },
                 "python-ta.cwd": {
